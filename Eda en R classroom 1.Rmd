@@ -1,0 +1,96 @@
+---
+title: "Analisis Exploratorio Kaggle Dataset"
+author: "Jeniffer_Funez"
+date: "2023-11-22"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+```{r}
+# Cargar los datos
+data <- read.csv("C:/Users/jenif/OneDrive/Documentos/Proyecto_EDA_&_Analisis_exploratorio/Ghibli-characters.csv")
+
+# Esto asegura la edad numerica
+data$age <- as.numeric(data$age)
+
+```
+
+
+```{r}
+# Limpio y preparo los datos para la grafica
+clean_data <- data %>% 
+  drop_na(age) # esto elimina los valores NA para la columna de edad si existen
+
+# Creando grafico de densidad para la edad
+age_density <- ggplot(clean_data, aes(x=age)) + 
+  geom_density(fill="blue", alpha=0.5) #color
+  labs(title="Densidad de Edad de los Personajes Ghibli", x="Edad", y="Densidad") +
+  theme_minimal()# añadi un tema minimalista
+
+age_density
+
+```
+
+
+```{r}
+# creando el histograma para la edad
+age_histogram <- ggplot(clean_data, aes(x=age)) + 
+  geom_histogram(binwidth=10, fill="blue", color="black") + 
+  labs(title="Histograma de Edades de los Personajes de Ghibli", x="Edad", y="Frecuencia") +
+  theme_minimal()
+
+age_histogram
+
+```
+
+```{r}
+# Boxplot para la edad por género
+boxplot_age_gender <- ggplot(data, aes(x=gender, y=age, fill=gender)) + 
+  geom_boxplot() + 
+  labs(title="Distribución de Edad por Género", x="Género", y="Edad") +
+  theme_minimal()
+
+boxplot_age_gender
+
+```
+
+
+```{r}
+  # Scatterplot para la relación entre edad y altura
+scatterplot_age_height <- ggplot(data, aes(x=age, y=height..cm.)) + 
+  geom_point(aes(color=gender), alpha=0.6) + 
+  labs(title="Relación entre Edad y Altura", x="Edad", y="Altura (cm)") +
+  theme_minimal()
+
+scatterplot_age_height
+
+```
+
+```{r}
+# Barplot para contar personajes por película
+barplot_characters_movie <- ggplot(data, aes(x=movie)) + 
+  geom_bar(aes(fill=movie)) + 
+  theme_minimal() +
+  labs(title="Cantidad de Personajes por Película", x="Película", y="Cantidad de Personajes") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+barplot_characters_movie
+
+```
+
+```{r}
+# Lineplot para la tendencia de altura a lo largo del tiempo
+lineplot_height_release <- ggplot(data, aes(x=release.date, y=height..cm., group=1)) + 
+  geom_line() + 
+  labs(title="Tendencia de Altura de los Personajes a lo largo del Tiempo", x="Año de Lanzamiento", y="Altura Media (cm)") +
+  theme_minimal()
+
+lineplot_height_release
+
+```
+

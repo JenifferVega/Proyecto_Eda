@@ -1,0 +1,50 @@
+---
+title: "Pokemon-dataset"
+author: "Jeniffer_Funez"
+date: "2023-11-22"
+output: pdf_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+```{r}
+pokemon <- read.csv("C:/Users/jenif/OneDrive/Documentos/Proyecto_EDA_&_Analisis_exploratorio/pokemon.csv")
+ggplot(pokemon, aes(x = Generation)) +
+  geom_bar(fill = "steelblue") +
+  theme_minimal() +
+  labs(title = "Distribución de las Generaciones de Pokémon",
+       x = "Generación", y = "Conteo")
+```
+
+```{r}
+ggplot(subset(pokemon, Legendary == FALSE), aes(x = Generation, y = Attack)) +
+  geom_boxplot(outlier.color = "red", fill = "lightblue") +
+  theme_minimal() +
+  labs(title = "Distribución del Ataque de Pokémon No Legendarios por Generación",
+       x = "Generación", y = "Ataque")
+```
+
+
+```{r}
+pokemon %>%
+  group_by(Legendary) %>%
+  summarise_at(vars(HP:Speed), mean, na.rm = TRUE) %>%
+  gather(key = "Stat", value = "Value", -Legendary) %>%
+  ggplot(aes(x = Stat, y = Value, fill = Legendary)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  theme_minimal() +
+  labs(title = "Comparación de Estadísticas: Legendarios vs No Legendarios",
+       x = "Estadística", y = "Valor Medio")
+```
+
+```{r}
+# Generación 1.
+gen1_pokemon <- subset(pokemon, Generation == 1)
+
+# Gráfico de Relación entre diferentes estadísticas.
+pairs(gen1_pokemon[, c("HP", "Attack", "Defense", "Sp..Atk", "Sp..Def", "Speed")])
+```
